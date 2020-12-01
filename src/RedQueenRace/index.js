@@ -1,10 +1,10 @@
-/** @format */
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import './style.css';
 import useWebAnimations from '@wellyshen/use-web-animations';
 
 export const RedQueenRace = () => {
-    var playBackRateRQ = 1;
+    const playBackRateRQ = useRef(1);
+    //var playBackRateRQ = 1;
     var playBackRateBG = 0;
     
     /* Background animations */
@@ -114,10 +114,10 @@ Every so many seconds, reduce their playback rate so they slow a little.
 // }
 
 const adjustBackgroundPlayback = () => {
-  if (playBackRateRQ < .8) {
-      playBackRateBG = (playBackRateRQ / 2) * -1;
-  } else if (playBackRateRQ > 1.2) {
-        playBackRateBG = (playBackRateRQ / 2);
+  if (playBackRateRQ.current < .8) {
+      playBackRateBG = (playBackRateRQ.current / 2) * -1;
+  } else if (playBackRateRQ.current > 1.2) {
+        playBackRateBG = (playBackRateRQ.current / 2);
   } else {
     playBackRateBG = 0;
   }   
@@ -149,28 +149,24 @@ const adjustBackgroundPlayback = () => {
 // document.addEventListener("touchstart", goFaster);
 
 useEffect(() => {
-    
-
     const bganimation = background1Movement.getAnimation();
     bganimation.currentTime = bganimation.effect.getTiming().duration / 2;
 
     const fganimation = foreground1Movement.getAnimation();
     fganimation.currentTime = fganimation.effect.getTiming().duration / 2;
 
-
-    
     setInterval(() => {
       /* Set decay */
-    if (playBackRateRQ > .4) {
-        playBackRateRQ *= .9;
-        redQueen_alice.getAnimation().playbackRate = playBackRateRQ;    
+    if (playBackRateRQ.current > .4) {
+        playBackRateRQ.current *= .9;
+        redQueen_alice.getAnimation().playbackRate = playBackRateRQ.current;    
     } 
       adjustBackgroundPlayback();
     }, 3000);
         
     document.addEventListener("click",() => {
-        playBackRateRQ *= 1.1;
-        redQueen_alice.getAnimation().playbackRate = playBackRateRQ;
+        playBackRateRQ.current *= 1.1;
+        redQueen_alice.getAnimation().playbackRate = playBackRateRQ.current;
         adjustBackgroundPlayback();
     });
 });
